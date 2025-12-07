@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CitrusArcade — Staking & Games</title>
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --bg:#0b0b0d;
+    --panel:#0f1113;
+    --muted:#9aa1a6;
+    --accent:#ff6a00;
+    --accent-2:#ffa200;
+    --glass: rgba(255,255,255,0.03);
+  }
+  html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:#e9eef3;}
+  body.light { --bg:#f6f7f8; --panel:#ffffff; --muted:#4b5563; --accent:#ff6a00; color:#071017; }
+  header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);backdrop-filter: blur(4px);position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(255,255,255,0.02)}
+  .left {display:flex;align-items:center;gap:12px;}
+  #logoReload{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;border:none;padding:0;margin:0}
+  h1{font-size:1.15rem;margin:0;letter-spacing:0.6px}
+  .controls{display:flex;gap:8px;align-items:center;}
+  .btn {background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--accent)}
+  .small{padding:6px 8px;font-size:0.9rem}
+  main{padding:18px;max-width:1200px;margin:0 auto}
+  .banner{display:flex;align-items:center;gap:16px;padding:14px;border-radius:12px;background:linear-gradient(90deg, rgba(255,106,0,0.08), rgba(255,162,0,0.04));border:1px solid rgba(255,106,0,0.06);margin-bottom:18px}
+  .banner .left {flex:1;display:flex;gap:14px;align-items:center}
+  .banner .play{display:flex;flex-direction:column;gap:8px}
+  .banner h2{margin:0;font-size:1.1rem}
+  .banner p{margin:0;color:var(--muted);font-size:0.95rem}
+  .logo-samples{display:flex;gap:10px}
+  .logo-samples svg{width:64px;height:64px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.5)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+  .game-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;min-height:120px;cursor:pointer;transition:transform .15s ease, border-color .15s}
+  .game-card:hover{transform:translateY(-6px);border-color:rgba(255,106,0,0.16)}
+  .game-title{font-weight:700;font-size:1rem}
+  .game-desc{color:var(--muted);font-size:0.9rem;text-align:center}
+  footer{padding:18px;text-align:center;color:var(--muted);font-size:0.9rem}
+  /* overlay / game window */
+  #gameFrame{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:60;align-items:center;justify-content:center}
+  #gameBox{width:92%;max-width:1100px;height:86%;background:var(--panel);border-radius:14px;padding:14px;position:relative;display:flex;flex-direction:column}
+  #closeGame{position:absolute;right:14px;top:14px;border:none;background:transparent;color:var(--muted);cursor:pointer;padding:8px;border-radius:8px}
+  .game-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;overflow:auto}
+  .pay-row{display:flex;gap:10px;align-items:center}
+  .muted{color:var(--muted)}
+  /* effects layer */
+  #effectsLayer{position:fixed;inset:0;pointer-events:none;z-index:5;opacity:0.55;mix-blend-mode:screen}
+  .fx{position:absolute;inset:0}
+  .fx.rain{background-image:linear-gradient(180deg, rgba(255,255,255,0.04) 1px, transparent 1px); background-size:4px 12px; animation:fall 6s linear infinite}
+  .fx.snow{background-image:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.06) 1px, transparent 2px); background-size:10px 10px; animation:fall 12s linear infinite}
+  .fx.fire{background:conic-gradient(from 0deg, rgba(255,120,0,0.12), rgba(255,62,0,0.06), rgba(255,120,0,0.08)); animation:flicker 10s infinite}
+  .fx.vines{background-image:linear-gradient(90deg, rgba(0,0,0,0.0) 0 40%, rgba(0,0,0,0.2) 100%);opacity:0.8}
+  @keyframes fall{0%{background-position:0 0}100%{background-position:0 100%}}
+  @keyframes flicker{0%,100%{opacity:1}50%{opacity:0.6}}
+  /* small */
+  .row{display:flex;gap:8px;align-items:center}
+  .info-box{background:var(--glass);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);color:var(--muted)}
+  /* responsive */
+  @media (max-width:700px){
+    header{padding:10px}
+    .banner{flex-direction:column;align-items:flex-start}
+    .logo-samples{justify-content:flex-start}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="left">
+    <button id="logoReload" title="Reload (CitrusCoin)">
+      <!-- SVG Ultra Bold Citrus Block (variant 3) -->
+      <svg viewBox="0 0 320 320" width="52" height="52" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CitrusCoin Logo">
+        <rect width="320" height="320" fill="#000" rx="32"></rect>
+        <rect x="10" y="10" width="300" height="300" rx="24" stroke="#FF6A00" stroke-width="10" fill="none"/>
+        <text x="50%" y="48%" text-anchor="middle" font-family="Impact, sans-serif" font-size="74" fill="#FF6A00" dy="-10">CITRUS</text>
+        <text x="50%" y="76%" text-anchor="middle" font-family="Impact, sans-serif" font-size="62" fill="#FF6A00">COIN</text>
+      </svg>
+    </button>
+    <h1>CitrusArcade</h1>
+  </div>
+  <div class="controls">
+    <button id="darkModeBtn" class="btn small ghost">Darkmode</button>
+    <button id="walletBtn" class="btn small">Connect Wallet</button>
+  </div>
+</header>
+
+<main>
+  <section class="banner">
+    <div class="left">
+      <div class="logo-samples" aria-hidden>
+        <!-- Variant 1 -->
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="320" rx="28" fill="#000000"/>
+          <text x="50%" y="53%" text-anchor="middle" fill="#FF7A00" font-family="Arial Black, sans-serif" font-size="64" letter-spacing="2" style="paint-order: stroke; stroke:#FFB400; stroke-width:4;">CITRUS</text>
+          <text x="50%" y="74%" text-anchor="middle" fill="#FF7A00" font-family="Arial Black, sans-serif" font-size="56" letter-spacing="1" style="paint-order: stroke; stroke:#FFB400; stroke-width:4;">COIN</text>
+        </svg>
+        <!-- Variant 2 -->
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <rect width="320" height="320" rx="20" fill="#0A0A0A"/>
+          <text x="50%" y="50%" text-anchor="middle" fill="#FFA200" font-family="Orbitron, sans-serif" font-size="60" style="text-shadow: 0 0 12px #FF5F00;">CITRUS</text>
+          <text x="50%" y="80%" text-anchor="middle" fill="#FFA200" font-family="Orbitron, sans-serif" font-size="52" style="text-shadow: 0 0 12px #FF5F00;">COIN</text>
+        </svg>
+        <!-- Image-based generated preview (from AI) -->
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAIAAACb0mTTAAA..." alt="CitrusCoin AI preview" style="width:64px;height:64px;border-radius:8px;object-fit:cover">
+      </div>
+      <div class="play">
+        <h2>Play Krypto-Game — Earn CitrusCoin</h2>
+        <p class="muted">Spiele & verdiene CIT, stakable auf CitrusArcade. Kein NFT. Solana Devnet ready.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="info-box">
+        <div style="font-weight:700">CIT Balance</div>
+        <div id="balance" class="muted">0.00 CIT</div>
+      </div>
+      <button id="playBtn" class="btn">Play Now</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="grid" id="gamesGrid">
+      <!-- 12 game buttons -->
+      <div class="game-card" data-game="1"><div class="game-title">Game 1</div><div class="game-desc">AgentBird (placeholder)</div><div class="muted">Play to earn CIT</div></div>
+      <div class="game-card" data-game="2"><div class="game-title">Game 2</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="3"><div class="game-title">Game 3</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="4"><div class="game-title">Game 4</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="5"><div class="game-title">Game 5</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="6"><div class="game-title">Game 6</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="7"><div class="game-title">Game 7</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="8"><div class="game-title">Game 8</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="9"><div class="game-title">Game 9</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="10"><div class="game-title">Game 10</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="11"><div class="game-title">Game 11</div><div class="game-desc">Coming</div></div>
+      <div class="game-card" data-game="12"><div class="game-title">Game 12</div><div class="game-desc">Coming</div></div>
+    </div>
+  </section>
+</main>
+
+<!-- Game overlay (no canvas) -->
+<div id="gameFrame" aria-hidden>
+  <div id="gameBox" role="dialog" aria-modal="true" aria-label="Game Window">
+    <button id="closeGame" title="Back">← Back</button>
+    <div class="game-content" id="gameContent">
+      <h3 id="gameHeading">Game</h3>
+      <p id="gameText" class="muted">Placeholder game content — here the game's UI and play/purchase controls will appear. No canvas; logic handled via backend calls.</p>
+      <div class="row pay-row">
+        <button id="startGameBtn" class="btn">Start (Free)</button>
+        <button id="buyCITBtn" class="btn ghost small">Buy CIT (demo)</button>
+      </div>
+      <div style="margin-top:12px" class="muted">When you earn CIT in games, the backend will credit your wallet / account. This demo is frontend only.</div>
+    </div>
+  </div>
+</div>
+
+<div id="effectsLayer" aria-hidden><div class="fx rain"></div></div>
+
+<footer>
+  CitrusArcade — CitrusCoin (CIT) • Devnet Demo • © CitrusArcade
+</footer>
+
+<script type="module">
+/*
+  CitrusArcade v1 — Single-module frontend
+  - Single <script type="module"> block (per your earlier request)
+  - Wallet connect placeholders for Phantom (Solana) and MetaMask (ETH)
+  - Effects engine rotates effects (rain / snow / fire / vines)
+  - Game overlay opens on each game button; Start triggers demo flow
+  - Balance shown is a demo variable (integrate with backend or Solana RPC later)
+*/
+
+/* ---------- Config / State ---------- */
+const STATE = {
+  walletConnected: false,
+  walletType: null, // 'solana' or 'ethereum' or null
+  publicKey: null,
+  citBalance: 0.0,
+  effects: ['rain','snow','fire','vines'],
+  effectIndex: 0,
+  paymentsEnabled: false // set to true once backend integrated
+};
+
+/* ---------- Helpers ---------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+/* ---------- UI Elements ---------- */
+const logoReload = $('#logoReload');
+const darkModeBtn = $('#darkModeBtn');
+const walletBtn = $('#walletBtn');
+const balanceEl = $('#balance');
+const gamesGrid = $('#gamesGrid');
+const gameFrame = $('#gameFrame');
+const gameBox = $('#gameBox');
+const closeGame = $('#closeGame');
+const gameHeading = $('#gameHeading');
+const gameText = $('#gameText');
+const startGameBtn = $('#startGameBtn');
+const playBtn = $('#playBtn');
+const buyCITBtn = $('#buyCITBtn');
+const effectsLayer = $('#effectsLayer');
+
+/* ---------- Small UI logic ---------- */
+logoReload.addEventListener('click', () => location.reload());
+darkModeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+  darkModeBtn.textContent = document.body.classList.contains('light') ? 'Lightmode' : 'Darkmode';
+});
+walletBtn.addEventListener('click', async () => {
+  await connectWalletFlow();
+});
+
+/* ---------- Effects Engine ---------- */
+function rotateEffects(){
+  const fxName = STATE.effects[STATE.effectIndex % STATE.effects.length];
+  effectsLayer.innerHTML = `<div class="fx ${fxName}"></div>`;
+  STATE.effectIndex++;
+  // cycle interval not fixed; randomize slightly
+  setTimeout(rotateEffects, 5000 + Math.floor(Math.random()*4000));
+}
+rotateEffects();
+
+/* ---------- Demo Balance Update ---------- */
+function renderBalance(){
+  balanceEl.textContent = STATE.citBalance.toFixed(4) + ' CIT';
+}
+renderBalance();
+
+/* ---------- Wallet Connect Flow (placeholders) ---------- */
+async function connectWalletFlow(){
+  // Try Phantom (Solana)
+  if (window.solana && window.solana.isPhantom){
+    try {
+      const resp = await window.solana.connect();
+      STATE.walletConnected = true;
+      STATE.walletType = 'solana';
+      STATE.publicKey = resp.publicKey.toString();
+      walletBtn.textContent = STATE.publicKey.slice(0,6) + '...' + STATE.publicKey.slice(-4);
+      console.log('Phantom connected:', STATE.publicKey);
+      // TODO: fetch real CIT balance via backend or Solana RPC
+      STATE.citBalance = 0.0;
+      renderBalance();
+      return;
+    } catch(e){
+      console.error('Phantom connect failed', e);
+    }
+  }
+  // Try Ethereum (MetaMask)
+  if (window.ethereum){
+    try {
+      const accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (accs && accs.length){
+        STATE.walletConnected = true;
+        STATE.walletType = 'ethereum';
+        STATE.publicKey = accs[0];
+        walletBtn.textContent = STATE.publicKey.slice(0,6) + '...' + STATE.publicKey.slice(-4);
+        console.log('MetaMask connected:', STATE.publicKey);
+        // TODO: fetch CIT balance via backend
+        STATE.citBalance = 0.0;
+        renderBalance();
+        return;
+      }
+    } catch(e){ console.error('MetaMask failed', e); }
+  }
+  // Fallback: no wallet
+  alert('Keine Wallet gefunden. Installiere Phantom (Solana) oder MetaMask (Ethereum).');
+}
+
+/* ---------- Game Open / Close ---------- */
+gamesGrid.addEventListener('click', (ev) => {
+  const card = ev.target.closest('.game-card');
+  if (!card) return;
+  const gameId = card.dataset.game;
+  openGame(gameId);
+});
+function openGame(gameId){
+  gameHeading.textContent = 'Game ' + gameId;
+  gameText.textContent = `This is a placeholder for Game ${gameId}. Here the UI for playing and earning CitrusCoin will appear.`;
+  gameFrame.style.display = 'flex';
+  gameFrame.setAttribute('aria-hidden', 'false');
+}
+closeGame.addEventListener('click', () => {
+  gameFrame.style.display = 'none';
+  gameFrame.setAttribute('aria-hidden', 'true');
+});
+
+/* ---------- Play / Start Demo ---------- */
+playBtn.addEventListener('click', () => {
+  openGame(1);
+});
+startGameBtn.addEventListener('click', () => {
+  // Demo: start free play -> simulate earning small CIT after 3s
+  startGameBtn.disabled = true;
+  startGameBtn.textContent = 'Playing…';
+  setTimeout(()=> {
+    const earned = parseFloat((Math.random()*0.25 + 0.05).toFixed(4));
+    STATE.citBalance += earned;
+    renderBalance();
+    startGameBtn.disabled = false;
+    startGameBtn.textContent = 'Start (Free)';
+    alert(`You earned ${earned.toFixed(4)} CIT (demo)!`);
+    // NOTE: In production, call backend to mint/transfer CIT to user wallet.
+  }, 3000);
+});
+
+/* ---------- Buy CIT (demo) ---------- */
+buyCITBtn.addEventListener('click', async () => {
+  if (!STATE.walletConnected){ alert('Connect wallet first'); return; }
+  // Demo: simulate purchase flow
+  const want = prompt('How many CIT do you want to buy (demo)?', '10');
+  if (!want) return;
+  const amount = parseFloat(want);
+  if (isNaN(amount) || amount <= 0) { alert('Invalid amount'); return; }
+  // In production: call backend to create tx & process payment; here we simulate
+  STATE.citBalance += amount;
+  renderBalance();
+  alert(`${amount} CIT added to your demo balance.`);
+});
+
+/* ---------- Placeholder: API integration notes ----------
+  - Replace demo flows with backend endpoints:
+    POST /api/connect  -> register wallet session
+    GET  /api/balance?addr=... -> returns CIT balance
+    POST /api/play -> backend computes earned CIT and credits user (returns tx or DB receipt)
+    POST /api/buy -> create purchase order (process payment via Fantom / Solana / ETH)
+  - Backend should sign/send txs if you're doing on-chain minting/transfers (use secure key store/HSM)
+-------------------------------------------------------*/
+
+/* ---------- Accessibility: Escape closes overlay ---------- */
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && gameFrame.style.display === 'flex') {
+    closeGame.click();
+  }
+});
+
+/* ---------- Small: ensure only one script / single module loaded ---------- */
+/* Everything above is the single-module orchestration block. Extend by adding backend calls where noted. */
+
+</script>
+</body>
+</html>
