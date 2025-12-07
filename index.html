@@ -1,131 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
 <title>CitrusArcade</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
+    :root {
+        --citrus: #ff8f1f;
+        --bg: #0a0a0a;
+        --panel: #111;
+    }
+
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: #0d0d0d;
-        color: #ffa31a;
-        overflow-x: hidden;
+        background: var(--bg);
+        color: var(--citrus);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
     }
 
     header {
-        background: #111;
-        padding: 15px;
-        text-align: center;
-        font-size: 24px;
+        background: var(--panel);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid var(--citrus);
+    }
+    #logo {
+        font-size: 26px;
         font-weight: bold;
-        letter-spacing: 1px;
+        text-shadow: 0 0 8px var(--citrus);
+    }
+    .btn {
+        padding: 10px 16px;
+        border: 2px solid var(--citrus);
+        background: transparent;
+        color: var(--citrus);
+        border-radius: 6px;
         cursor: pointer;
-        border-bottom: 2px solid #ffa31a;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+    .btn:hover {
+        background: var(--citrus);
+        color: #000;
+        box-shadow: 0 0 12px var(--citrus);
     }
 
-    .games-container {
+    /* ---------- Arcade Grid ---------- */
+    main {
+        flex: 1;
+        padding: 25px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
-        padding: 30px;
-    }
-
-    .game-btn {
-        background: #1a1a1a;
-        border: 2px solid #ffa31a;
-        padding: 20px;
-        cursor: pointer;
-        text-align: center;
-        font-size: 18px;
-        transition: 0.25s ease;
-        border-radius: 12px;
-    }
-
-    .game-btn:hover {
-        background: #ffa31a;
-        color: #111;
-        transform: scale(1.05);
-    }
-
-    /* Game Screen */
-    #gameArea {
-        display: none;
-        width: 100vw;
-        height: 100vh;
         background: #000;
-        overflow: hidden;
-        position: relative;
     }
 
-    .back-btn {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: #ffa31a;
-        padding: 10px 14px;
+    .game-slot {
+        background: #111;
+        border: 2px solid var(--citrus);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         cursor: pointer;
-        border-radius: 8px;
+        transition: 0.25s;
+        padding: 12px;
+    }
+    .game-slot:hover {
+        background: var(--citrus);
+        color: #000;
+        transform: scale(1.05);
+        box-shadow: 0 0 20px var(--citrus);
+    }
+    .slot-title {
+        font-size: 18px;
         font-weight: bold;
-        border: none;
+        margin-top: 10px;
+    }
+
+    footer {
+        text-align:center;
+        font-size:12px;
+        padding:10px;
+        background: var(--panel);
+        border-top:2px solid var(--citrus);
+    }
+
+    /* Big Arcade look */
+    @media (max-width: 1000px) {
+        main { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 700px) {
+        main { grid-template-columns: repeat(2, 1fr); }
     }
 </style>
-
 </head>
 <body>
 
-<header id="reloadLogo">🍊 CitrusArcade</header>
-
-<div id="gameMenu">
-    <div class="games-container">
-        <div class="game-btn" data-game="1">Game 1</div>
-        <div class="game-btn" data-game="2">Game 2</div>
-        <div class="game-btn" data-game="3">Game 3</div>
-        <div class="game-btn" data-game="4">Game 4</div>
-        <div class="game-btn" data-game="5">Game 5</div>
-        <div class="game-btn" data-game="6">Game 6</div>
-        <div class="game-btn" data-game="7">Game 7</div>
-        <div class="game-btn" data-game="8">Game 8</div>
-        <div class="game-btn" data-game="9">Game 9</div>
-        <div class="game-btn" data-game="10">Game 10</div>
-        <div class="game-btn" data-game="11">Game 11</div>
-        <div class="game-btn" data-game="12">Game 12</div>
+<header>
+    <div id="logo">CitrusArcade</div>
+    <div style="display:flex; gap:10px;">
+        <button class="btn" id="connectETH">🦊 MetaMask</button>
+        <button class="btn" id="connectSOL">👻 Phantom</button>
+        <button class="btn" onclick="location.reload()">🔄 Reload</button>
     </div>
-</div>
+</header>
 
-<div id="gameArea">
-    <button class="back-btn" onclick="backToMenu()">Back</button>
-    <div id="gameStage"></div>
-</div>
+<main>
+    <!-- 12 Game Platzhalter -->
+    <div class="game-slot" onclick="openGame(1)">🎮 <div class="slot-title">Game 1</div></div>
+    <div class="game-slot" onclick="openGame(2)">🎮 <div class="slot-title">Game 2</div></div>
+    <div class="game-slot" onclick="openGame(3)">🎮 <div class="slot-title">Game 3</div></div>
+    <div class="game-slot" onclick="openGame(4)">🎮 <div class="slot-title">Game 4</div></div>
+    <div class="game-slot" onclick="openGame(5)">🎮 <div class="slot-title">Game 5</div></div>
+    <div class="game-slot" onclick="openGame(6)">🎮 <div class="slot-title">Game 6</div></div>
+    <div class="game-slot" onclick="openGame(7)">🎮 <div class="slot-title">Game 7</div></div>
+    <div class="game-slot" onclick="openGame(8)">🎮 <div class="slot-title">Game 8</div></div>
+    <div class="game-slot" onclick="openGame(9)">🎮 <div class="slot-title">Game 9</div></div>
+    <div class="game-slot" onclick="openGame(10)">🎮 <div class="slot-title">Game 10</div></div>
+    <div class="game-slot" onclick="openGame(11)">🎮 <div class="slot-title">Game 11</div></div>
+    <div class="game-slot" onclick="openGame(12)">🎮 <div class="slot-title">Game 12</div></div>
+</main>
+
+<footer>© 2025 CitrusArcade — All Rights Reserved</footer>
 
 <script>
-    const logo = document.getElementById("reloadLogo");
-    const gameMenu = document.getElementById("gameMenu");
-    const gameArea = document.getElementById("gameArea");
-    const stage = document.getElementById("gameStage");
+/* ---- Wallet Demo Connect ---- */
+document.getElementById("connectSOL").onclick = async () => {
+    if (!window.solana) return alert("Phantom Wallet fehlt");
+    try {
+        const resp = await window.solana.connect();
+        alert("SOL verbunden: " + resp.publicKey.toString());
+    } catch {}
+};
 
-    logo.addEventListener("click", () => location.reload());
+document.getElementById("connectETH").onclick = async () => {
+    if (!window.ethereum) return alert("MetaMask fehlt");
+    try {
+        const accounts = await ethereum.request({ method:'eth_requestAccounts' });
+        alert("ETH verbunden: " + accounts[0]);
+    } catch {}
+};
 
-    document.querySelectorAll(".game-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const gameID = btn.getAttribute("data-game");
-            loadGame(gameID);
-        });
-    });
-
-    function backToMenu() {
-        gameArea.style.display = "none";
-        gameMenu.style.display = "block";
-        stage.innerHTML = "";
-    }
-
-    function loadGame(n) {
-        gameMenu.style.display = "none";
-        gameArea.style.display = "block";
-        stage.innerHTML = `<h2 style='color:white;text-align:center;margin-top:40vh;'>Game ${n} Placeholder</h2>`;
-        // HIER kommt später das Game 1, 2, 3 usw. rein
-    }
+/* ---- Platzhalter Game Open ---- */
+function openGame(id){
+    alert("Spiel " + id + " folgt…");
+}
 </script>
 
 </body>
