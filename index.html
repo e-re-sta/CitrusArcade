@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>CitrusArcade</title>
@@ -9,193 +9,123 @@
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: #111;
-        color: #ffb700;
-        transition: background 0.3s, color 0.3s;
+        background: #0d0d0d;
+        color: #ffa31a;
+        overflow-x: hidden;
     }
 
-    /* HEADER + LOGO */
     header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 20px;
-        background: #222;
-        border-bottom: 2px solid #ffb700;
-    }
-    #logo {
+        background: #111;
+        padding: 15px;
+        text-align: center;
         font-size: 24px;
         font-weight: bold;
+        letter-spacing: 1px;
         cursor: pointer;
-        color: #ffb700;
+        border-bottom: 2px solid #ffa31a;
     }
 
-    /* DARKMODE TOGGLE */
-    #darkToggle {
-        cursor: pointer;
-        padding: 6px 12px;
-        background: #ffb700;
-        color: #111;
-        font-weight: bold;
-        border-radius: 6px;
-        border: none;
-    }
-
-    /* SPIELE GRID */
-    .games {
+    .games-container {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        padding: 20px;
-    }
-    .game-btn {
-        background: #222;
-        border: 2px solid #ffb700;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 20px;
         padding: 30px;
-        text-align: center;
-        font-size: 20px;
-        cursor: pointer;
-        border-radius: 10px;
-        transition: transform 0.1s;
     }
+
+    .game-btn {
+        background: #1a1a1a;
+        border: 2px solid #ffa31a;
+        padding: 20px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 18px;
+        transition: 0.25s ease;
+        border-radius: 12px;
+    }
+
     .game-btn:hover {
+        background: #ffa31a;
+        color: #111;
         transform: scale(1.05);
     }
 
-    /* GAME POPUP */
-    #gamePopup {
-        display:none;
-        position:fixed;
-        top:0; left:0;
-        width:100%; height:100%;
-        background:rgba(0,0,0,0.8);
-        z-index:1000;
-        align-items:center;
-        justify-content:center;
-    }
-    #gameWindow {
-        background:#111;
-        padding:20px;
-        width:80%;
-        height:70%;
-        border:3px solid #ffb700;
-        border-radius:12px;
-        position:relative;
-    }
-    #closeGame {
-        position:absolute;
-        top:10px; right:10px;
-        cursor:pointer;
-        padding:5px 10px;
-        background:#ffb700;
-        color:#111;
-        border-radius:6px;
-        font-weight:bold;
+    /* Game Screen */
+    #gameArea {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        overflow: hidden;
+        position: relative;
     }
 
-    /* DARKMODE ACTIVE */
-    .dark body {
-        background:#eee;
-        color:#111;
+    .back-btn {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #ffa31a;
+        padding: 10px 14px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-weight: bold;
+        border: none;
     }
-
 </style>
-</head>
 
+</head>
 <body>
 
-<header>
-    <div id="logo">🍊 CitrusArcade</div>
-    <button id="darkToggle">Dark Mode</button>
-</header>
+<header id="reloadLogo">🍊 CitrusArcade</header>
 
-<div class="games">
-    <div class="game-btn" data-game="1">Game 1</div>
-    <div class="game-btn" data-game="2">Game 2</div>
-    <div class="game-btn" data-game="3">Game 3</div>
-    <div class="game-btn" data-game="4">Game 4</div>
-    <div class="game-btn" data-game="5">Game 5</div>
-    <div class="game-btn" data-game="6">Game 6</div>
-    <div class="game-btn" data-game="7">Game 7</div>
-    <div class="game-btn" data-game="8">Game 8</div>
-    <div class="game-btn" data-game="9">Game 9</div>
-    <div class="game-btn" data-game="10">Game 10</div>
-    <div class="game-btn" data-game="11">Game 11</div>
-    <div class="game-btn" data-game="12">Game 12</div>
-</div>
-
-<!-- POPUP GAME WINDOW -->
-<div id="gamePopup">
-    <div id="gameWindow">
-        <div id="closeGame">X</div>
-        <h2 id="gameTitle">Game 1</h2>
-        <div id="gameStage" style="background:#222; border:2px solid #ffb700; width:100%; height:85%;"></div>
+<div id="gameMenu">
+    <div class="games-container">
+        <div class="game-btn" data-game="1">Game 1</div>
+        <div class="game-btn" data-game="2">Game 2</div>
+        <div class="game-btn" data-game="3">Game 3</div>
+        <div class="game-btn" data-game="4">Game 4</div>
+        <div class="game-btn" data-game="5">Game 5</div>
+        <div class="game-btn" data-game="6">Game 6</div>
+        <div class="game-btn" data-game="7">Game 7</div>
+        <div class="game-btn" data-game="8">Game 8</div>
+        <div class="game-btn" data-game="9">Game 9</div>
+        <div class="game-btn" data-game="10">Game 10</div>
+        <div class="game-btn" data-game="11">Game 11</div>
+        <div class="game-btn" data-game="12">Game 12</div>
     </div>
 </div>
 
+<div id="gameArea">
+    <button class="back-btn" onclick="backToMenu()">Back</button>
+    <div id="gameStage"></div>
+</div>
+
 <script>
-/* RELOAD */
-document.getElementById("logo").addEventListener("click", ()=>location.reload());
+    const logo = document.getElementById("reloadLogo");
+    const gameMenu = document.getElementById("gameMenu");
+    const gameArea = document.getElementById("gameArea");
+    const stage = document.getElementById("gameStage");
 
-/* DARK MODE */
-document.getElementById("darkToggle").addEventListener("click", ()=>{
-    document.body.classList.toggle("light");
-});
+    logo.addEventListener("click", () => location.reload());
 
-/* GAME POPUP HANDLING */
-const popup = document.getElementById("gamePopup");
-const title = document.getElementById("gameTitle");
-const stage = document.getElementById("gameStage");
+    document.querySelectorAll(".game-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const gameID = btn.getAttribute("data-game");
+            loadGame(gameID);
+        });
+    });
 
-document.querySelectorAll(".game-btn").forEach(btn=>{
-    btn.onclick = ()=>{
-        const id = btn.getAttribute("data-game");
-        openGame(id);
-    };
-});
-
-function openGame(id){
-    title.textContent = "Game " + id;
-    popup.style.display="flex";
-
-    if(id == "1"){
-        loadGame1();
-    } else {
-        stage.innerHTML = "<p style='padding:20px'>Game " + id + " – Placeholder</p>";
+    function backToMenu() {
+        gameArea.style.display = "none";
+        gameMenu.style.display = "block";
+        stage.innerHTML = "";
     }
-}
 
-/* CLOSE GAME */
-document.getElementById("closeGame").onclick = ()=>{
-    popup.style.display="none";
-    stage.innerHTML = "";
-};
-
-/* GAME 1 BASIC ENGINE */
-let player = null;
-function loadGame1(){
-    stage.innerHTML = "";
-    player = document.createElement("div");
-    player.style.width="40px";
-    player.style.height="40px";
-    player.style.background="#ffb700";
-    player.style.position="absolute";
-    player.style.left="50%";
-    player.style.top="50%";
-    stage.appendChild(player);
-
-    window.onkeydown = (e)=>{
-        const step = 10;
-        let x = parseInt(player.style.left);
-        let y = parseInt(player.style.top);
-        if(e.key === "ArrowUp") y -= step;
-        if(e.key === "ArrowDown") y += step;
-        if(e.key === "ArrowLeft") x -= step;
-        if(e.key === "ArrowRight") x += step;
-        player.style.left = x + "px";
-        player.style.top = y + "px";
-    };
-}
+    function loadGame(n) {
+        gameMenu.style.display = "none";
+        gameArea.style.display = "block";
+        stage.innerHTML = `<h2 style='color:white;text-align:center;margin-top:40vh;'>Game ${n} Placeholder</h2>`;
+        // HIER kommt später das Game 1, 2, 3 usw. rein
+    }
 </script>
 
 </body>
