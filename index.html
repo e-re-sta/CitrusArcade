@@ -3,167 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <title>CitrusArcade</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body {
         margin:0;
         font-family: Arial, sans-serif;
-        background:#000;
-        color:#ffa200;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100vh;
+        background:#0a0a0a;
+        color:#ffa93b;
         overflow:hidden;
     }
-    .screen {
-        width:100vw;
-        height:100vh;
-        display:none;
-        flex-direction:column;
-        justify-content:center;
-        align-items:center;
-    }
-    #menuScreen {
-        display:flex;
-        gap:20px;
-        flex-wrap:wrap;
-        padding:20px;
-    }
-    .game-button {
-        width:200px;
+    header {
         height:80px;
         background:#111;
-        border:2px solid #ffa200;
-        color:#ffa200;
+        display:flex;
+        align-items:center;
+        padding:0 20px;
+        box-shadow:0 0 15px #ff8c00;
+        cursor:pointer;
+    }
+    header img {
+        height:60px;
+    }
+    #mainMenu, .gameScreen {
+        width:100%;
+        height:calc(100vh - 80px);
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        align-items:center;
+        gap:20px;
+        padding:20px;
+    }
+    .gameScreen {
+        display:none;
+        flex-direction:column;
+    }
+    button.gameBtn {
+        width:180px;
+        height:180px;
+        background:#181818;
+        border:2px solid #ffa93b;
+        color:#ffa93b;
         font-size:20px;
         cursor:pointer;
-        border-radius:10px;
+        border-radius:12px;
         transition:0.2s;
     }
-    .game-button:hover {
-        background:#ffa200;
-        color:#000;
+    button.gameBtn:hover {
+        background:#ffa93b;
+        color:#181818;
     }
-    #gameCanvas {
-        background:#0a0a0a;
-        border:3px solid #ffa200;
-    }
-    #backBtn {
+    .backBtn {
         margin-top:20px;
-        padding:15px 25px;
-        background:#111;
-        border:2px solid #ffa200;
-        color:#ffa200;
-        border-radius:10px;
-        cursor:pointer;
+        background:#ffa93b;
+        color:#111;
+        padding:12px 25px;
         font-size:18px;
+        cursor:pointer;
+        border-radius:8px;
+        border:none;
     }
-    #backBtn:hover { background:#ffa200; color:#000; }
 </style>
 </head>
 
 <body>
 
-<!-- MENU -->
-<div id="menuScreen" class="screen">
-    <h1 style="width:100%;text-align:center;">CITRUS ARCADE</h1>
+<header onclick="reloadPage()">
+    <!-- Dein Logo hier -->
+    <img src="citrus-logo.png" alt="Reload CitrusArcade">
+</header>
 
-    <!-- 12 Games -->
-    <button class="game-button" onclick="openGame(1)">GAME 1 – Waran</button>
-    <button class="game-button" onclick="openGame(2)">GAME 2</button>
-    <button class="game-button" onclick="openGame(3)">GAME 3</button>
-    <button class="game-button" onclick="openGame(4)">GAME 4</button>
-    <button class="game-button" onclick="openGame(5)">GAME 5</button>
-    <button class="game-button" onclick="openGame(6)">GAME 6</button>
-    <button class="game-button" onclick="openGame(7)">GAME 7</button>
-    <button class="game-button" onclick="openGame(8)">GAME 8</button>
-    <button class="game-button" onclick="openGame(9)">GAME 9</button>
-    <button class="game-button" onclick="openGame(10)">GAME 10</button>
-    <button class="game-button" onclick="openGame(11)">GAME 11</button>
-    <button class="game-button" onclick="openGame(12)">GAME 12</button>
+<!-- Lobby -->
+<div id="mainMenu">
+    <button class="gameBtn" onclick="openGame(1)">Game 1</button>
+    <button class="gameBtn" onclick="openGame(2)">Game 2</button>
+    <button class="gameBtn" onclick="openGame(3)">Game 3</button>
+    <button class="gameBtn" onclick="openGame(4)">Game 4</button>
+    <button class="gameBtn" onclick="openGame(5)">Game 5</button>
+    <button class="gameBtn" onclick="openGame(6)">Game 6</button>
+    <button class="gameBtn" onclick="openGame(7)">Game 7</button>
+    <button class="gameBtn" onclick="openGame(8)">Game 8</button>
+    <button class="gameBtn" onclick="openGame(9)">Game 9</button>
+    <button class="gameBtn" onclick="openGame(10)">Game 10</button>
+    <button class="gameBtn" onclick="openGame(11)">Game 11</button>
+    <button class="gameBtn" onclick="openGame(12)">Game 12</button>
 </div>
 
-<!-- GAME SCREEN -->
-<div id="gameScreen" class="screen">
-    <canvas id="gameCanvas" width="900" height="600"></canvas>
-    <button id="backBtn" onclick="returnToMenu()">Zurück</button>
-</div>
+<!-- 12 Game Screens (Platzhalter) -->
+<div id="game1" class="gameScreen"><h1>Game 1 – Jungle Varan</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game2" class="gameScreen"><h1>Game 2</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game3" class="gameScreen"><h1>Game 3</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game4" class="gameScreen"><h1>Game 4</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game5" class="gameScreen"><h1>Game 5</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game6" class="gameScreen"><h1>Game 6</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game7" class="gameScreen"><h1>Game 7</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game8" class="gameScreen"><h1>Game 8</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game9" class="gameScreen"><h1>Game 9</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game10" class="gameScreen"><h1>Game 10</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game11" class="gameScreen"><h1>Game 11</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
+<div id="game12" class="gameScreen"><h1>Game 12</h1><button class="backBtn" onclick="backToMenu()">Zurück</button></div>
 
 <script>
-    let currentGame = 0;
-    let gameInterval;
 
-    function openGame(n){
-        currentGame = n;
-        document.getElementById("menuScreen").style.display="none";
-        document.getElementById("gameScreen").style.display="flex";
+// Reload durch Logo
+function reloadPage() {
+    location.reload();
+}
 
-        startGame();
+// Speicher für aktive Loops
+let activeLoop = null;
+
+// 12 Game-Loop Platzhalter
+function gameLoop1() { console.log("Game 1 Loop läuft..."); }
+function gameLoop2() { console.log("Game 2 Loop läuft..."); }
+function gameLoop3() { console.log("Game 3 Loop läuft..."); }
+function gameLoop4() { console.log("Game 4 Loop läuft..."); }
+function gameLoop5() { console.log("Game 5 Loop läuft..."); }
+function gameLoop6() { console.log("Game 6 Loop läuft..."); }
+function gameLoop7() { console.log("Game 7 Loop läuft..."); }
+function gameLoop8() { console.log("Game 8 Loop läuft..."); }
+function gameLoop9() { console.log("Game 9 Loop läuft..."); }
+function gameLoop10() { console.log("Game 10 Loop läuft..."); }
+function gameLoop11() { console.log("Game 11 Loop läuft..."); }
+function gameLoop12() { console.log("Game 12 Loop läuft..."); }
+
+// Mapping, damit wir dynamisch starten können
+const loops = {
+    1: gameLoop1, 2: gameLoop2, 3: gameLoop3, 4: gameLoop4,
+    5: gameLoop5, 6: gameLoop6, 7: gameLoop7, 8: gameLoop8,
+    9: gameLoop9, 10: gameLoop10, 11: gameLoop11, 12: gameLoop12
+};
+
+// Game öffnen + Loop starten
+function openGame(n) {
+    stopLoop(); // falls noch ein anderes Spiel läuft
+    document.getElementById("mainMenu").style.display = "none";
+
+    let activeGame = document.getElementById("game"+n);
+    activeGame.style.display = "flex";
+
+    // Game Loop starten (60fps)
+    activeLoop = setInterval(loops[n], 1000 / 60);
+}
+
+// Loop stoppen
+function stopLoop() {
+    if(activeLoop){
+        clearInterval(activeLoop);
+        activeLoop = null;
     }
+}
 
-    function returnToMenu(){
-        stopGame();
-        document.getElementById("gameScreen").style.display="none";
-        document.getElementById("menuScreen").style.display="flex";
-    }
+// Zurück zur Lobby
+function backToMenu() {
+    stopLoop();
+    let games = document.querySelectorAll('.gameScreen');
+    games.forEach(g => g.style.display = "none");
+    document.getElementById("mainMenu").style.display = "flex";
+}
 
-    // GAME CORE
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
+// Hier später Wallet + Payment + Staking rein
+    
+// Reload durch Logo
+function reloadPage() {
+    location.reload();
+}
 
-    function startGame(){
-        stopGame();
-        gameInterval = setInterval(() => {
-            runGameLoop(currentGame);
-        }, 1000/60);
-    }
+// Game öffnen
+function openGame(n) {
+    document.getElementById("mainMenu").style.display = "none";
+    document.getElementById("game"+n).style.display = "flex";
+}
 
-    function stopGame(){
-        if(gameInterval){ clearInterval(gameInterval); }
-    }
+// Zurück zur Lobby
+function backToMenu() {
+    let games = document.querySelectorAll('.gameScreen');
+    games.forEach(g => g.style.display = "none");
+    document.getElementById("mainMenu").style.display = "flex";
+}
 
-    function runGameLoop(n){
-        switch(n){
-            case 1 : gameLoop1(); break;
-            case 2 : gameLoop2(); break;
-            case 3 : gameLoop3(); break;
-            case 4 : gameLoop4(); break;
-            case 5 : gameLoop5(); break;
-            case 6 : gameLoop6(); break;
-            case 7 : gameLoop7(); break;
-            case 8 : gameLoop8(); break;
-            case 9 : gameLoop9(); break;
-            case 10: gameLoop10(); break;
-            case 11: gameLoop11(); break;
-            case 12: gameLoop12(); break;
-        }
-    }
-
-    // ---------------------------
-    // 12x GAMELOOP PLATZHALTER
-    // ---------------------------
-
-    function clearGame(){ ctx.fillStyle="#0a0a0a"; ctx.fillRect(0,0,canvas.width,canvas.height); }
-
-    function gameLoop1(){ // WARAN
-        clearGame();
-        ctx.fillStyle="#ffa200";
-        ctx.font="40px Arial";
-        ctx.fillText("Waran Jungle Hunt - PREVIEW", 200,300);
-    }
-    function gameLoop2(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 2",400,300)}
-    function gameLoop3(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 3",400,300)}
-    function gameLoop4(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 4",400,300)}
-    function gameLoop5(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 5",400,300)}
-    function gameLoop6(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 6",400,300)}
-    function gameLoop7(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 7",400,300)}
-    function gameLoop8(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 8",400,300)}
-    function gameLoop9(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 9",400,300)}
-    function gameLoop10(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 10",380,300)}
-    function gameLoop11(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 11",380,300)}
-    function gameLoop12(){ clearGame(); ctx.fillStyle="#fff"; ctx.fillText("Game 12",380,300)}
-
+// Hier später Wallet + Payment + Staking rein
 </script>
 
 </body>
